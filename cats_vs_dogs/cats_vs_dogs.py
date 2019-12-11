@@ -11,6 +11,7 @@ from tensorflow.keras.layers import Dense
 from tensorflow.keras.layers import Flatten
 from tensorflow.keras.optimizers import SGD
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
+from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
 import tfinit
 from datetime import datetime
 
@@ -90,16 +91,25 @@ def summarize_diagnostics(history):
 
 
 # run the test harness for evaluating a model
-def run_test_harness():
+def caclulate_model():
     # define model
     model = define_three_block_model()
+
+    checkpoint_path = 'checkpoints/checkpoin-{epoch:02d}-{val_accuracy:.2f}.hdf5'
+    keras_callbacks = [
+        EarlyStopping(monitor='val_loss', patience=30, mode='min', min_delta=0.0001),
+        ModelCheckpoint(checkpoint_path, monitor='val_loss', save_best_only=False, mode='min')
+    ]
+
     # create data generator
-    datagen = ImageDataGenerator(rescale=1.0 / 255.0)
+    train_datagen = ImageDataGenerator(rescale=1.0 / 255.0,
+                                       width_shift_range=0.1, height_shift_range=0.1, horizontal_flip=True)
+    test_datagen = ImageDataGenerator(rescale=1.0 / 255.0)
     # prepare iterators
-    train_it = datagen.flow_from_directory('dataset_dogs_vs_cats/train/',
-                                           class_mode='binary', batch_size=16, target_size=(200, 200))
-    test_it = datagen.flow_from_directory('dataset_dogs_vs_cats/test/',
-                                          class_mode='binary', batch_size=16, target_size=(200, 200))
+    train_it = train_datagen.flow_from_directory('dataset_dogs_vs_cats/train/',
+                                                 class_mode='binary', batch_size=16, target_size=(200, 200))
+    test_it = test_datagen.flow_from_directory('dataset_dogs_vs_cats/test/',
+                                               class_mode='binary', batch_size=16, target_size=(200, 200))
     # fit model
     history = model.fit_generator(train_it, steps_per_epoch=len(train_it),
                                   validation_data=test_it, validation_steps=len(test_it), epochs=20,
@@ -118,4 +128,4 @@ def run_test_harness():
 
 
 # entry point, run the test harness
-model = run_test_harness()
+model = caclulate_model()
