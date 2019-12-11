@@ -97,7 +97,7 @@ def caclulate_model():
 
     checkpoint_path = 'checkpoints/checkpoin-{epoch:02d}-{val_accuracy:.2f}.hdf5'
     keras_callbacks = [
-        EarlyStopping(monitor='val_loss', patience=30, mode='min', min_delta=0.0001),
+        EarlyStopping(monitor='val_loss', patience=10, mode='min', min_delta=0.0001),
         ModelCheckpoint(checkpoint_path, monitor='val_loss', save_best_only=False, mode='min')
     ]
 
@@ -124,8 +124,9 @@ def caclulate_model():
     # learning curves
     summarize_diagnostics(history)
 
-    return model
+    return model, history
 
 
 # entry point, run the test harness
-model = caclulate_model()
+# prepere_dataset()
+model, history = caclulate_model()
