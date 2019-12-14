@@ -1,6 +1,6 @@
-# GSN-1 - homework - 227958 #
+# GSN-1 - homework - 227958 - Konrad Sochacki #
 
-### Exc 1 - Fashion MNIST###
+### Exc 1 - Fashion MNIST ###
 
 lab1.py
 
