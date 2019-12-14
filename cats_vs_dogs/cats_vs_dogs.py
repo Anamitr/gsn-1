@@ -3,7 +3,7 @@ from shutil import copyfile
 import os
 import sys
 from matplotlib import pyplot
-from tensorflow.keras.utils import to_categorical
+from tensorflow import keras
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Conv2D
 from tensorflow.keras.layers import MaxPooling2D
@@ -12,12 +12,15 @@ from tensorflow.keras.layers import Flatten
 from tensorflow.keras.optimizers import SGD
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
-import tfinit
+from tensorflow.keras import layers
+import util
 from datetime import datetime
+
+# import tuning as tuning
 
 folder = 'dogs-vs-cats/train/'
 
-tfinit.tfinit()
+util.tfinit()
 
 
 def prepere_dataset():
@@ -127,6 +130,5 @@ def caclulate_model():
     return model, history
 
 
-# entry point, run the test harness
 # prepere_dataset()
 model, history = caclulate_model()
